@@ -1,0 +1,54 @@
+name: Deploy static site to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  # Allows manually triggering a deploy from the Actions tab.
+  workflow_dispatch:
+
+# Allow only one concurrent deployment, skipping runs queued between the run
+# in-progress and the latest queued. Do not cancel an in-progress deploy.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Stage static files for publishing
+        # No build/compile step is required (no bundler). This step just
+        # copies the actual site files (index.html, css/, js/, assets/)
+        # into a clean folder so that project docs (requirements.md,
+        # planning.md, etc.) and repo scaffolding (.claude/, .git/) are not
+        # published as part of the live site.
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp -r css _site/css
+          cp -r js _site/js
+          if [ -d assets ]; then cp -r assets _site/assets; fi
+
+      - name: Upload static site as a Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
