@@ -1,0 +1,240 @@
+{
+  "configVersion": "1.0.0",
+  "lastUpdated": "2026-07-09",
+  "_description": "Single project-wide settings file consumed by all agents in the AI SDLC workflow (sdlc-orchestrator, requirements-agent, planning-agent, design-agent, development-agent, code-review-agent, testing-qa-agent, documentation-agent, cicd-agent, sow-agent, github-agent). Edit values here rather than hard-coding settings inside individual agent files.",
+
+  "projectMode": {
+    "value": "new",
+    "_notes": "Set to 'new' for a greenfield project with no existing codebase, architecture, or tech stack to respect. Set to 'existing' for a brownfield project where a real codebase (and possibly its own architecture and tech stack) already exists and must be treated as a constraint rather than a blank slate. The sdlc-orchestrator must read this value before starting any request: in 'existing' mode it inserts a codebase-discovery step before requirements gathering, and it tells requirements-agent and design-agent to treat discovered reality (current behavior, current architecture, current tech stack) as a constraint instead of proposing from scratch. Change this value manually when starting a project of the other type."
+  },
+
+  "agents": {
+    "_notes": "One entry per agent defined in .claude/agents. 'model' set to 'inherit' means the agent uses the orchestrator/session default model unless a specific model id (e.g. 'claude-sonnet-4.5', 'claude-opus-4.5') is set here. 'maxTokens' caps the response length budget for that agent; if an agent entry omits 'maxTokens', it uses 'defaults.maxTokens' below instead.",
+    "defaults": {
+      "maxTokens": 8000,
+      "_notes": "Fallback maxTokens used by any agent entry below that does not set its own 'maxTokens' value."
+    },
+    "sdlc-orchestrator": {
+      "model": "inherit"
+    },
+    "requirements-agent": {
+      "model": "inherit"
+    },
+    "planning-agent": {
+      "model": "inherit"
+    },
+    "design-agent": {
+      "model": "inherit"
+    },
+    "development-agent": {
+      "model": "inherit"
+    },
+    "code-review-agent": {
+      "model": "inherit"
+    },
+    "testing-qa-agent": {
+      "model": "inherit"
+    },
+    "documentation-agent": {
+      "model": "inherit"
+    },
+    "cicd-agent": {
+      "model": "inherit"
+    },
+    "sow-agent": {
+      "model": "inherit"
+    },
+    "github-agent": {
+      "model": "inherit"
+    }
+  },
+
+  "techStack": {
+    "_notes": "These are placeholder/example defaults only. They must be reviewed and confirmed (or edited) against the actual project requirements.md and architecture.md before implementation work begins. Do not assume these values are final for every project.",
+    "backend": {
+      "language": "Node",
+      "framework": "Express.js",
+      "notes": "Default placeholder. Replace with the actual backend technology chosen for this project."
+    },
+    "frontend": {
+      "language": "TypeScript/JavaScript",
+      "framework": "React",
+      "notes": "Default placeholder. Replace with the actual frontend technology chosen for this project."
+    },
+    "database": {
+      "engine": "PostgreSQL",
+      "notes": "Default placeholder. Replace with the actual database chosen for this project."
+    },
+    "containerization": {
+      "tool": "Docker",
+      "orchestration": "docker-compose",
+      "notes": "Default placeholder. Replace with actual containerization/orchestration approach if different."
+    }
+  },
+
+  "setupChecklist": [
+    {
+      "id": "setup-001",
+      "description": "Verify required SDKs/tools installed (see environmentVerification.requiredTools)",
+      "status": "pending"
+    },
+    {
+      "id": "setup-002",
+      "description": "Initialize git repository",
+      "status": "pending"
+    },
+    {
+      "id": "setup-003",
+      "description": "Confirm tech stack in architecture.md matches the techStack section of this config",
+      "status": "pending"
+    },
+    {
+      "id": "setup-004",
+      "description": "Configure GitHub repository settings (branch protection, PR rules, etc.)",
+      "status": "pending"
+    },
+    {
+      "id": "setup-005",
+      "description": "Run dependency install for backend project",
+      "status": "pending"
+    },
+    {
+      "id": "setup-006",
+      "description": "Run dependency install for frontend project",
+      "status": "pending"
+    },
+    {
+      "id": "setup-007",
+      "description": "Provision local/dev database and apply initial migrations",
+      "status": "pending"
+    },
+    {
+      "id": "setup-008",
+      "description": "Verify Docker/containerization setup builds and runs locally",
+      "status": "pending"
+    },
+    {
+      "id": "setup-009",
+      "description": "Confirm CI/CD pipeline configuration is present and passing",
+      "status": "pending"
+    }
+  ],
+
+  "environmentVerification": {
+    "missingSoftwarePolicy": "Agents must NOT automatically install any missing tools, SDKs, runtimes, or dependencies under any circumstance. If a required tool is missing or below the minimum version, the agent must stop, clearly report what is missing and why it is needed, and explicitly ask the user for permission to install it. Only after the user gives explicit approval may the agent proceed with installation. This policy is mandatory and applies to every agent in this workflow.",
+    "requiredTools": [
+      {
+        "name": "dotnet-sdk",
+        "checkCommand": "dotnet --version",
+        "minVersion": "8.0.0",
+        "installed": "unknown"
+      },
+      {
+        "name": "node",
+        "checkCommand": "node --version",
+        "minVersion": "18.0.0",
+        "installed": "unknown"
+      },
+      {
+        "name": "npm",
+        "checkCommand": "npm --version",
+        "minVersion": "9.0.0",
+        "installed": "unknown"
+      },
+      {
+        "name": "docker",
+        "checkCommand": "docker --version",
+        "minVersion": "24.0.0",
+        "installed": "unknown"
+      },
+      {
+        "name": "git",
+        "checkCommand": "git --version",
+        "minVersion": "2.30.0",
+        "installed": "unknown"
+      },
+      {
+        "name": "github-cli",
+        "checkCommand": "gh --version",
+        "minVersion": "2.40.0",
+        "installed": "unknown"
+      },
+      {
+        "name": "postgresql-client",
+        "checkCommand": "psql --version",
+        "minVersion": "14.0",
+        "installed": "unknown"
+      }
+    ]
+  },
+
+  "git": {
+    "_notes": "Automation toggles consumed by github-agent only. Branch naming patterns, default/protected branches, commit message convention, and PR rules are already defined below under 'github' (branchStrategy, commitConventions, pullRequestRules, protectedBranches) — github-agent reads both sections rather than duplicating branch/PR conventions here.",
+    "enabled": true,
+    "autoCreateBranch": true,
+    "autoCommit": false,
+    "autoPush": false,
+    "autoCreatePullRequest": true,
+    "autoMerge": false,
+    "deleteBranchAfterMerge": true,
+    "useConventionalCommits": true,
+    "requireUserApprovalForPush": true,
+    "requireUserApprovalForMerge": true,
+    "useGitHubCLI": true
+  },
+
+  "github": {
+    "repository": {
+      "owner": "e2logydev-cyber",
+      "name": "helloworld",
+      "url": "https://github.com/e2logydev-cyber/helloworld.git"
+    },
+    "branchStrategy": {
+      "mainBranch": "main",
+      "developBranch": "develop",
+      "featureBranchPattern": "feature/{ticket-id}-{short-description}",
+      "bugfixBranchPattern": "bugfix/{ticket-id}-{short-description}",
+      "hotfixBranchPattern": "hotfix/{ticket-id}-{short-description}",
+      "notes": "Naming convention placeholders. Adjust to match the actual team convention."
+    },
+    "commitConventions": {
+      "format": "Conventional Commits",
+      "pattern": "<type>(<scope>): <short summary>",
+      "allowedTypes": ["feat", "fix", "docs", "style", "refactor", "test", "chore", "ci"]
+    },
+    "pullRequestRules": {
+      "requiredReviewers": 1,
+      "requiredStatusChecks": ["build", "lint", "unit-tests"],
+      "squashMergePreferred": true,
+      "templatePath": ".github/pull_request_template.md"
+    },
+    "protectedBranches": ["main", "develop"],
+    "issueLinkingConvention": "Reference issue/ticket ids in commit messages and PR descriptions, e.g. 'Closes #123'"
+  },
+
+  "projectSettings": {
+    "projectName": "hello world",
+    "description": "REPLACE_WITH_PROJECT_DESCRIPTION",
+    "defaultWorkingDirectory": ".",
+    "logging": {
+      "verbosity": "info",
+      "notes": "Allowed values: debug, info, warn, error"
+    },
+    "artifactPaths": {
+      "requirements": "requirements.md",
+      "planning": "planning.md",
+      "architecture": "architecture.md",
+      "review": "review.md",
+      "qaReport": "qa-report.md",
+      "manualTestCases": "manual-test-cases.md",
+      "designSystemHandoff": "design-system-handoff/e2logy-design-system/README.md",
+      "sow": "SOW.md",
+      "gitSummary": "git-summary.md",
+      "pullRequest": "pull-request.md",
+      "releaseSummary": "release-summary.md"
+    },
+    "designSystemHandoff": {
+      "_notes": "Externally produced artifact (via Claude Design), not generated by this SDLC pipeline. Covers UI components, CSS, styling, and design tokens/visual design elements ONLY — it does not define application architecture, business logic, or functional requirements. Only consult it when projectMode.value == 'new'; skip it for 'existing' projects, which already have their own established design system to respect. development-agent is the primary consumer (applies it to the UI layer during implementation); design-agent only adds a pointer note in architecture.md and must not treat it as architectural input."
+    }
+  }
+}
