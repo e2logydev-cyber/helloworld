@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello World</title>
+  <meta name="description" content="Hello World page with a Contact Us form.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <main class="page">
+    <section class="hello-section">
+      <h1 id="hello-world">Hello World</h1>
+    </section>
+
+    <section class="contact-section" aria-labelledby="contact-heading">
+      <h2 id="contact-heading">Contact Us</h2>
+
+      <form id="contact-form" novalidate>
+        <div class="form-field">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" autocomplete="name">
+          <span class="error-message" id="name-error" role="alert"></span>
+        </div>
+
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input type="text" id="email" name="email" autocomplete="email">
+          <span class="error-message" id="email-error" role="alert"></span>
+        </div>
+
+        <div class="form-field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5"></textarea>
+          <span class="error-message" id="message-error" role="alert"></span>
+        </div>
+
+        <button type="submit" id="submit-button">Submit</button>
+
+        <p class="success-message" id="success-message" role="status" aria-live="polite" hidden></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="js/validators.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
