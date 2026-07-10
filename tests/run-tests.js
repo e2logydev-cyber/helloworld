@@ -10,7 +10,14 @@
  */
 "use strict";
 
-var testFiles = ["./validators.test.js", "./ui.test.js", "./app.test.js"];
+var testFiles = [
+  "./validators.test.js",
+  "./ui.test.js",
+  "./app.test.js",
+  "./fields.test.js",
+  "./html-structure.test.js",
+  "./load-order.test.js"
+];
 
 var passCount = 0;
 var failCount = 0;

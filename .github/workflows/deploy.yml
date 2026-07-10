@@ -28,6 +28,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run tests
+        # Dependency-free unit test suite (tests/run-tests.js). A failing
+        # test here fails this step and blocks the Pages deploy below.
+        run: node tests/run-tests.js
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 

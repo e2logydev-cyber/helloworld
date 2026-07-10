@@ -15,6 +15,7 @@ function run(t) {
   t.test("showErrors renders the specific message next to each failing field", function () {
     var fixture = createFixture();
     var sandbox = { window: {}, console: console };
+    loadScriptInto("js/fields.js", sandbox);
     loadScriptInto("js/ui.js", sandbox);
     var showErrors = sandbox.window.HelloWorldApp.showErrors;
 
@@ -43,6 +44,7 @@ function run(t) {
   t.test("showErrors adds has-error styling hook only to failing fields", function () {
     var fixture = createFixture();
     var sandbox = { window: {}, console: console };
+    loadScriptInto("js/fields.js", sandbox);
     loadScriptInto("js/ui.js", sandbox);
     var showErrors = sandbox.window.HelloWorldApp.showErrors;
 
@@ -56,6 +58,7 @@ function run(t) {
   t.test("showErrors moves focus to the first invalid field (keyboard support)", function () {
     var fixture = createFixture();
     var sandbox = { window: {}, console: console };
+    loadScriptInto("js/fields.js", sandbox);
     loadScriptInto("js/ui.js", sandbox);
     var showErrors = sandbox.window.HelloWorldApp.showErrors;
 
@@ -71,6 +74,7 @@ function run(t) {
   t.test("showErrors clears previous errors before applying the new set", function () {
     var fixture = createFixture();
     var sandbox = { window: {}, console: console };
+    loadScriptInto("js/fields.js", sandbox);
     loadScriptInto("js/ui.js", sandbox);
     var showErrors = sandbox.window.HelloWorldApp.showErrors;
 
@@ -91,6 +95,7 @@ function run(t) {
   t.test("showSuccessAndReset shows the confirmation text and resets the form", function () {
     var fixture = createFixture();
     var sandbox = { window: {}, console: console };
+    loadScriptInto("js/fields.js", sandbox);
     loadScriptInto("js/ui.js", sandbox);
     var showSuccessAndReset = sandbox.window.HelloWorldApp.showSuccessAndReset;
 
@@ -106,6 +111,7 @@ function run(t) {
   t.test("showSuccessAndReset clears any leftover error state", function () {
     var fixture = createFixture();
     var sandbox = { window: {}, console: console };
+    loadScriptInto("js/fields.js", sandbox);
     loadScriptInto("js/ui.js", sandbox);
     var showErrors = sandbox.window.HelloWorldApp.showErrors;
     var showSuccessAndReset = sandbox.window.HelloWorldApp.showSuccessAndReset;

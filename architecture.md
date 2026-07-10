@@ -60,14 +60,22 @@ No requirement in `requirements.md` calls for a backend, and several requirement
 ├── css/
 │   └── styles.css             # Layout, responsive rules, visible focus states
 ├── js/
+│   ├── fields.js               # Single source of truth for field identifiers: HelloWorldApp.FIELD_NAMES = ["name","email","message"]; loaded before validators.js/ui.js/app.js
 │   ├── app.js                 # Entry point: wires up the form on page load
-│   ├── validators.js          # Required-field and email-format checks (FR-4, FR-5)
-│   └── ui.js                  # Show/hide error messages, success message, form reset (FR-6, FR-7, FR-9)
+│   ├── validators.js          # Required-field and email-format checks (FR-4, FR-5); reads field names from fields.js
+│   └── ui.js                  # Show/hide error messages, success message, form reset (FR-6, FR-7, FR-9); reads field names from fields.js
 ├── assets/
-│   └── favicon.ico            # Optional, small nicety, not tied to any requirement
+│   └── favicon.svg            # Optional, small nicety, not tied to any requirement; inline SVG instead of a binary .ico
+├── tests/
+│   ├── dom-fixture.js          # Minimal DOM stand-in used to run the app's code outside a real browser
+│   ├── load-script.js          # Helper that loads the app's script files into the test environment
+│   ├── run-tests.js            # Test runner entry point: node tests/run-tests.js
+│   ├── validators.test.js      # Unit tests for validators.js
+│   ├── ui.test.js              # Unit tests for ui.js
+│   └── app.test.js             # Unit tests for app.js
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml         # CI step that publishes the static files (see Deployment section)
+│       └── deploy.yml         # CI workflow: runs the test suite, then publishes the static files (see Deployment section)
 ├── requirements.md
 ├── planning.md
 ├── architecture.md
@@ -75,7 +83,8 @@ No requirement in `requirements.md` calls for a backend, and several requirement
 ```
 
 Notes on structure:
-- `js/` is split into three small files (entry point, validation, UI feedback) instead of one large file. This keeps each piece easy to find and test, and matches the natural task split already used in `planning.md` (EPIC-3 = validation, EPIC-4 = success/reset).
+- `js/` is split into small files (field-name constants, entry point, validation, UI feedback) instead of one large file. This keeps each piece easy to find and test, and matches the natural task split already used in `planning.md` (EPIC-3 = validation, EPIC-4 = success/reset). `fields.js` holds the one list of field names both `validators.js` and `ui.js` read from, so the two files cannot drift out of sync with each other.
+- `tests/` holds a small, dependency-free unit test suite for the JavaScript in `js/`. It uses only Node's built-in `assert` and `vm` modules, so it needs no `npm install` and no external test framework. It is run with `node tests/run-tests.js`, and is now also run automatically in CI before deploy (see Deployment section).
 - No `src/`, `dist/`, or `build/` folders are needed since there is no compile step.
 - **Design System Handoff pointer:** since this is a `projectMode: "new"` project, UI implementation (the HTML structure, CSS, and styling of the page and form) should follow whatever is defined in the Design System Handoff artifact at `design-system-handoff/e2logy-design-system/README.md` (per `.claude/project-config.json` → `projectSettings.artifactPaths.designSystemHandoff`). As of this writing that artifact does not yet exist in the repository. This is a pointer only, for visual/styling decisions during development; it does not change or inform anything in this architecture document.
 
@@ -143,13 +152,14 @@ The project already has a GitHub repository at `https://github.com/e2logydev-cyb
 
 1. The static files (`index.html`, `css/`, `js/`, `assets/`) live at the root of the repository on `main`.
 2. GitHub Pages is turned on for the repository (Settings → Pages → Source: deploy from the `main` branch, root folder). This is a one-time repository setting, not something this document can turn on directly.
-3. A small GitHub Actions workflow (`.github/workflows/deploy.yml`) publishes the page automatically each time changes land on `main`, using the standard `actions/upload-pages-artifact` + `actions/deploy-pages` actions. Since there is no build step, this workflow just packages the existing static files and hands them to Pages. Illustrative shape only (not full working YAML):
+3. A small GitHub Actions workflow (`.github/workflows/deploy.yml`) publishes the page automatically each time changes land on `main`, using the standard `actions/upload-pages-artifact` + `actions/deploy-pages` actions. After checkout, the workflow now runs the dependency-free unit test suite (`node tests/run-tests.js`) as a gating step. If any test fails, the workflow stops there and the Pages staging/upload/deploy steps do not run, so a failing test blocks deployment. Only once the tests pass does the workflow package the existing static files and hand them to Pages. Illustrative shape only (not full working YAML):
 
 ```
 on: push to main
 jobs:
   deploy:
     - checkout repository
+    - run unit tests: node tests/run-tests.js   # gate: stops the workflow if any test fails
     - upload static files as a Pages artifact
     - deploy the artifact to GitHub Pages
 ```
@@ -162,7 +172,7 @@ jobs:
 - "Turn on HTTPS" → automatic once GitHub Pages is enabled; no separate task needed.
 - "Confirm the live, hosted page matches the version that was built and tested" → compare the deployed GitHub Pages URL against the reviewed/merged version on `main` after each deploy.
 
-No CI/CD steps beyond the single deploy workflow are needed at this project's size (no test suite to run in CI yet, since testing here is manual per `planning.md`'s Non-Functional Quality checks in EPIC-5).
+No CI/CD steps beyond the single deploy workflow are needed at this project's size. That one workflow now does two things in sequence: run the unit test suite (`node tests/run-tests.js`), then publish to Pages, so a failing test blocks the deploy rather than testing being a separate, manual step.
 
 ---
 
@@ -229,6 +239,7 @@ flowchart TB
         HTML[index.html<br/>structure: heading + form]
         CSS[styles.css<br/>layout, responsive rules]
         subgraph JS["JavaScript (ES6 modules)"]
+            Fields[fields.js<br/>shared field-name constants]
             App[app.js<br/>entry point, wiring]
             Validators[validators.js<br/>required-field + email checks]
             UI[ui.js<br/>errors, success message, reset]
@@ -236,6 +247,8 @@ flowchart TB
         HTML --> App
         App --> Validators
         App --> UI
+        Fields --> Validators
+        Fields --> UI
     end
 
     subgraph Host["GitHub Pages"]
@@ -255,5 +268,5 @@ There is intentionally no "backend" box, no "database" box, and no "API gateway"
 - Chosen stack: plain HTML5, CSS3, vanilla JavaScript (ES6+), no build tool, no framework. Reason: proportionate to a one-page, one-form static site; keeps load time low (NFR-1) and avoids unneeded dependency/build overhead.
 - No database, no browser storage (`localStorage`/cookies) for form data either, since requirements say nothing should persist after the visitor leaves the page (FR-8, NFR-6).
 - Hosting: GitHub Pages, since a GitHub repository already exists for this project and Pages provides free HTTPS with no extra infrastructure. Resolves the EPIC-6 placeholder in `planning.md`.
-- Deployment: a single GitHub Actions workflow packages and publishes the static files to Pages after a pull request is merged to `main`, respecting the existing branch protection already set up for this repository.
+- Deployment: a single GitHub Actions workflow now runs the dependency-free unit test suite (`node tests/run-tests.js`) and then packages and publishes the static files to Pages after a pull request is merged to `main`, respecting the existing branch protection already set up for this repository. A failing test blocks the deploy.
 - Design System Handoff artifact (`design-system-handoff/e2logy-design-system/README.md`) does not exist yet as of this writing; it is called out only as a pointer for development to follow for UI styling, and has not influenced any decision in this document.

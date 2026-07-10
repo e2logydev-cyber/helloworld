@@ -33,6 +33,13 @@
       // message (AC-7, US-4.3): disable the button immediately.
       submitButton.disabled = true;
 
+      // Clear any success message left over from a previous submission
+      // before evaluating this new attempt. Without this, a valid submit
+      // followed immediately by an invalid one (e.g. the form was just
+      // reset per FR-9) would show the old "message sent" confirmation at
+      // the same time as new field errors, which is a contradictory state.
+      global.HelloWorldApp.hideSuccess(successMessage);
+
       var formValues = {
         name: nameInput ? nameInput.value : "",
         email: emailInput ? emailInput.value : "",
@@ -51,7 +58,6 @@
       // FR-8: demo placeholder only. Nothing is sent over the network and
       // nothing is written to any storage — this is purely a local,
       // in-memory console log for demonstration purposes.
-      // eslint-disable-next-line no-console
       console.log("Contact form submitted (demo only, not sent anywhere):", formValues);
 
       global.HelloWorldApp.showSuccessAndReset(form, successMessage, document);

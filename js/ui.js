@@ -12,7 +12,12 @@
 (function (global) {
   "use strict";
 
-  var FIELD_NAMES = ["name", "email", "message"];
+  global.HelloWorldApp = global.HelloWorldApp || {};
+
+  // Field identifiers come from js/fields.js (the single source of truth
+  // shared with validators.js and matching index.html's element ids/names).
+  // This must be loaded before ui.js (see index.html script order).
+  var FIELD_NAMES = global.HelloWorldApp.FIELD_NAMES;
 
   /**
    * Clears every field-level error message and the "has-error" styling hook.
@@ -111,7 +116,6 @@
     }
   }
 
-  global.HelloWorldApp = global.HelloWorldApp || {};
   global.HelloWorldApp.clearErrors = clearErrors;
   global.HelloWorldApp.showErrors = showErrors;
   global.HelloWorldApp.showSuccessAndReset = showSuccessAndReset;
