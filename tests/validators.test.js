@@ -10,6 +10,7 @@ var loadScriptInto = require("./load-script").loadScriptInto;
 
 function run(t) {
   var sandbox = { window: {}, console: console };
+  loadScriptInto("js/fields.js", sandbox);
   loadScriptInto("js/validators.js", sandbox);
   var validateForm = sandbox.window.HelloWorldApp.validateForm;
 

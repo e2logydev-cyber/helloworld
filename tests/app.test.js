@@ -18,6 +18,7 @@ var createFixture = require("./dom-fixture").createFixture;
 
 function loadApp(fixture) {
   var sandbox = { window: fixture.window, document: fixture.document, console: console };
+  loadScriptInto("js/fields.js", sandbox);
   loadScriptInto("js/validators.js", sandbox);
   loadScriptInto("js/ui.js", sandbox);
   loadScriptInto("js/app.js", sandbox);
@@ -88,7 +89,7 @@ function run(t) {
     assert.deepStrictEqual(elements.submitButton.disabledHistory, [true, false]);
   });
 
-  t.test("a second submit right after a successful one only re-validates the (now empty) form, never shows two success messages back to back without a fresh valid fill", function () {
+  t.test("a second submit right after a successful one re-validates the (now empty) form and hides the stale success message", function () {
     var fixture = createFixture();
     loadApp(fixture);
     var elements = fixture.elements;
@@ -101,15 +102,41 @@ function run(t) {
     // Fields are empty again after the reset (FR-9). A second, immediate
     // submit attempt (e.g. from a double-click) hits validation instead of
     // producing a second, confusing success message.
-    var successTextBeforeSecondSubmit = elements.successMessage.textContent;
     submit(elements);
 
     assert.ok(elements.nameError.textContent.length > 0, "second submit on the now-empty form shows errors");
+    // Regression test for a fixed bug: the stale success banner from the
+    // first submission must not remain visible while new validation errors
+    // are shown — that would be a contradictory UI state (the page cannot
+    // simultaneously say "message sent" and "please fix these errors").
+    assert.strictEqual(
+      elements.successMessage.hidden,
+      true,
+      "stale success message must be hidden once a new, failed submit attempt begins"
+    );
     assert.strictEqual(
       elements.successMessage.textContent,
-      successTextBeforeSecondSubmit,
-      "success message text is not duplicated or changed by the second attempt"
+      "",
+      "success message text must be cleared, not just visually hidden"
     );
+  });
+
+  t.test("hideSuccess is called at the start of every submit attempt, clearing any previous success confirmation", function () {
+    var fixture = createFixture();
+    loadApp(fixture);
+    var elements = fixture.elements;
+
+    // Simulate a success message left over from an earlier submission,
+    // without going through a full valid submit first, to isolate the
+    // "clear stale success at the start of handleSubmit" behavior.
+    elements.successMessage.hidden = false;
+    elements.successMessage.textContent = "Thank you, your message has been sent.";
+
+    fillForm(elements, { name: "", email: "", message: "" });
+    submit(elements);
+
+    assert.strictEqual(elements.successMessage.hidden, true);
+    assert.strictEqual(elements.successMessage.textContent, "");
   });
 
   t.test("submitted data is only logged to the console, nothing else observable happens on the network layer", function () {
@@ -121,6 +148,7 @@ function run(t) {
       }
     };
     var sandbox = { window: fixture.window, document: fixture.document, console: fakeConsole };
+    loadScriptInto("js/fields.js", sandbox);
     loadScriptInto("js/validators.js", sandbox);
     loadScriptInto("js/ui.js", sandbox);
     loadScriptInto("js/app.js", sandbox);

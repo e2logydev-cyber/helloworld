@@ -11,9 +11,22 @@
 (function (global) {
   "use strict";
 
+  global.HelloWorldApp = global.HelloWorldApp || {};
+
+  // Field identifiers come from js/fields.js (the single source of truth
+  // shared with ui.js and matching index.html's element ids/names). This
+  // must be loaded before validators.js (see index.html script order).
+  var FIELD_NAMES = global.HelloWorldApp.FIELD_NAMES;
+
   // Simple, reasonable email pattern: something@something.something
   // Not a full RFC-5322 validator, just a practical "looks like an email" check per FR-5.
   var EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  var REQUIRED_MESSAGES = {
+    name: "Please enter your name.",
+    email: "Please enter your email address.",
+    message: "Please enter a message."
+  };
 
   /**
    * Validates a single set of form values.
@@ -22,25 +35,17 @@
    */
   function validateForm(formValues) {
     var values = formValues || {};
-    var name = (values.name || "").trim();
-    var email = (values.email || "").trim();
-    var message = (values.message || "").trim();
-
     var errors = {};
 
-    if (!name) {
-      errors.name = "Please enter your name.";
-    }
+    FIELD_NAMES.forEach(function (field) {
+      var value = (values[field] || "").trim();
 
-    if (!email) {
-      errors.email = "Please enter your email address.";
-    } else if (!EMAIL_PATTERN.test(email)) {
-      errors.email = "Please enter a valid email address (e.g. name@example.com).";
-    }
-
-    if (!message) {
-      errors.message = "Please enter a message.";
-    }
+      if (!value) {
+        errors[field] = REQUIRED_MESSAGES[field];
+      } else if (field === "email" && !EMAIL_PATTERN.test(value)) {
+        errors.email = "Please enter a valid email address (e.g. name@example.com).";
+      }
+    });
 
     return {
       valid: Object.keys(errors).length === 0,
@@ -48,6 +53,5 @@
     };
   }
 
-  global.HelloWorldApp = global.HelloWorldApp || {};
   global.HelloWorldApp.validateForm = validateForm;
 })(window);
