@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SDLC Live Status Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+  <header class="page-header">
+    <h1>SDLC Live Status Dashboard</h1>
+    <p class="subtitle">Live view of each stage in the AI-driven SDLC workflow.</p>
+  </header>
+
+  <section class="how-it-works" aria-label="How this works">
+    <h2>How this works</h2>
+    <ul>
+      <li>This page is <strong>polling-based, not push-based</strong>. It re-checks <code>status.json</code> every 2 seconds and redraws the page. It is not a live push feed.</li>
+      <li><strong>Total Tokens Used</strong> reflects the tokens reported by the specialist agent delegated for that stage (captured from that agent's tool-call result). It does not include the full end-to-end token cost of the orchestrator's own reasoning or tool calls outside of delegation. Treat this number as a good-faith measurement of delegated work, not a total token bill.</li>
+      <li>This page also polls <code>pending-question.json</code>. If the orchestrator has an open question, the normal stage view is replaced by a question panel here until you answer it. See the README for how this "question bridge" works.</li>
+    </ul>
+  </section>
+
+  <div id="connection-indicator" class="connection-indicator" hidden>
+    Connection lost, retrying...
+  </div>
+
+  <section id="question-panel" class="question-panel" hidden aria-live="polite" aria-label="Orchestrator question">
+    <h2 class="question-panel-title">The workflow needs your input</h2>
+    <p id="question-stage" class="question-stage"></p>
+    <p id="question-text" class="question-text"></p>
+
+    <div id="question-options" class="question-options">
+      <!-- Option buttons or a free-text form are rendered here by dashboard.js -->
+    </div>
+
+    <p id="question-feedback" class="question-feedback" hidden></p>
+  </section>
+
+  <main>
+    <div id="stage-grid" class="stage-grid" aria-live="polite">
+      <!-- Stage cards are rendered here by dashboard.js -->
+    </div>
+  </main>
+
+  <footer class="page-footer">
+    <p id="last-updated">Last updated: —</p>
+  </footer>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

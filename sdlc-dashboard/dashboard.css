@@ -1,0 +1,286 @@
+/* SDLC Live Status Dashboard styles
+   Plain CSS3, no framework, no build step. */
+
+:root {
+  --color-bg: #f4f5f7;
+  --color-card-bg: #ffffff;
+  --color-border: #d9dce1;
+  --color-text: #1f2430;
+  --color-muted: #6b7280;
+
+  --color-pending-bg: #e5e7eb;
+  --color-pending-text: #4b5563;
+
+  --color-running-bg: #dbeafe;
+  --color-running-text: #1d4ed8;
+
+  --color-completed-bg: #d1fae5;
+  --color-completed-text: #047857;
+
+  --color-failed-bg: #fee2e2;
+  --color-failed-text: #b91c1c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 1.5rem;
+  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.page-header h1 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.6rem;
+}
+
+.subtitle {
+  margin: 0 0 1rem 0;
+  color: var(--color-muted);
+}
+
+.how-it-works {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.how-it-works h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.how-it-works ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.how-it-works li {
+  margin-bottom: 0.35rem;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.how-it-works li:last-child {
+  margin-bottom: 0;
+}
+
+.connection-indicator {
+  background: var(--color-failed-bg);
+  color: var(--color-failed-text);
+  border: 1px solid var(--color-failed-text);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.question-panel {
+  background: var(--color-card-bg);
+  border: 2px solid var(--color-running-text);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.question-panel-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.15rem;
+  color: var(--color-running-text);
+}
+
+.question-stage {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-weight: 700;
+}
+
+.question-text {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.question-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.question-option-button {
+  background: var(--color-running-bg);
+  color: var(--color-running-text);
+  border: 1px solid var(--color-running-text);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.question-option-button:hover {
+  filter: brightness(0.95);
+}
+
+.question-option-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.question-text-input {
+  flex: 1 1 260px;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-family: inherit;
+  min-height: 2.4rem;
+  resize: vertical;
+}
+
+.question-submit-button {
+  background: var(--color-running-text);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.question-submit-button:hover {
+  filter: brightness(1.1);
+}
+
+.question-submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.question-feedback {
+  margin: 0.9rem 0 0 0;
+  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+}
+
+.question-feedback.feedback-success {
+  background: var(--color-completed-bg);
+  color: var(--color-completed-text);
+}
+
+.question-feedback.feedback-error {
+  background: var(--color-failed-bg);
+  color: var(--color-failed-text);
+}
+
+.stage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.stage-card {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.stage-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.stage-name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.status-badge.status-pending {
+  background: var(--color-pending-bg);
+  color: var(--color-pending-text);
+}
+
+.status-badge.status-running {
+  background: var(--color-running-bg);
+  color: var(--color-running-text);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.status-badge.status-completed {
+  background: var(--color-completed-bg);
+  color: var(--color-completed-text);
+}
+
+.status-badge.status-failed {
+  background: var(--color-failed-bg);
+  color: var(--color-failed-text);
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.stage-detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: 0.35rem;
+}
+
+.stage-detail-row .label {
+  color: var(--color-muted);
+}
+
+.stage-detail-row .value {
+  text-align: right;
+}
+
+.value.not-recorded {
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.page-footer {
+  margin-top: 1.5rem;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}

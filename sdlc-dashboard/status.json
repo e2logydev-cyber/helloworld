@@ -1,0 +1,113 @@
+{
+  "lastUpdated": "2026-07-13T00:00:00.000Z",
+  "stages": [
+    {
+      "name": "Requirements",
+      "status": "Completed",
+      "startTime": null,
+      "endTime": null,
+      "durationSeconds": null,
+      "tokensUsed": null,
+      "tokensNote": "not recorded — this stage completed before the dashboard existed"
+    },
+    {
+      "name": "Planning",
+      "status": "Completed",
+      "startTime": null,
+      "endTime": null,
+      "durationSeconds": null,
+      "tokensUsed": null,
+      "tokensNote": "not recorded — this stage completed before the dashboard existed"
+    },
+    {
+      "name": "Design",
+      "status": "Completed",
+      "startTime": null,
+      "endTime": null,
+      "durationSeconds": null,
+      "tokensUsed": null,
+      "tokensNote": "not recorded — this stage completed before the dashboard existed"
+    },
+    {
+      "name": "Branch Setup",
+      "status": "Completed",
+      "startTime": null,
+      "endTime": null,
+      "durationSeconds": null,
+      "tokensUsed": null,
+      "tokensNote": "not recorded — this stage completed before the dashboard existed"
+    },
+    {
+      "name": "Development",
+      "status": "Completed",
+      "startTime": null,
+      "endTime": null,
+      "durationSeconds": null,
+      "tokensUsed": null,
+      "tokensNote": "not recorded — this stage completed before the dashboard existed"
+    },
+    {
+      "name": "Commit & PR",
+      "status": "Completed",
+      "startTime": null,
+      "endTime": null,
+      "durationSeconds": null,
+      "tokensUsed": null,
+      "tokensNote": "not recorded — this stage completed before the dashboard existed"
+    },
+    {
+      "name": "Code Review",
+      "status": "Completed",
+      "startTime": null,
+      "endTime": null,
+      "durationSeconds": null,
+      "tokensUsed": null,
+      "tokensNote": "not recorded — this stage completed before the dashboard existed"
+    },
+    {
+      "name": "Testing & QA",
+      "status": "Completed",
+      "startTime": null,
+      "endTime": null,
+      "durationSeconds": null,
+      "tokensUsed": null,
+      "tokensNote": "not recorded — this stage completed before the dashboard existed"
+    },
+    {
+      "name": "Merge",
+      "status": "Completed",
+      "startTime": null,
+      "endTime": null,
+      "durationSeconds": null,
+      "tokensUsed": null,
+      "tokensNote": "not recorded — this stage completed before the dashboard existed"
+    },
+    {
+      "name": "CI/CD",
+      "status": "Pending",
+      "startTime": null,
+      "endTime": null,
+      "durationSeconds": null,
+      "tokensUsed": null,
+      "tokensNote": null
+    },
+    {
+      "name": "Release",
+      "status": "Pending",
+      "startTime": null,
+      "endTime": null,
+      "durationSeconds": null,
+      "tokensUsed": null,
+      "tokensNote": null
+    },
+    {
+      "name": "Documentation",
+      "status": "Pending",
+      "startTime": null,
+      "endTime": null,
+      "durationSeconds": null,
+      "tokensUsed": null,
+      "tokensNote": null
+    }
+  ]
+}
